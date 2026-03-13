@@ -1,9 +1,26 @@
 import os
 from dotenv import load_dotenv
+from flask import Flask
 
-load_dotenv()
+from src.routes.k_auth import auth_bp
+from src.routes.l_home import home_bp
+from src.routes.m_chat import chat_bp
+from src.routes.n_tts import tts_bp
+from src.routes.o_stt import stt_bp
+from src.routes.health import health_bp
+from src.p_error_handlers import errors_bp
 
 from src.config import get_config, validate_config, ConfigError
+from src.logging_config import setup_logging
+from src.middleware.logging_middleware import setup_logging_middleware
+from flask_talisman import Talisman
+from src.security_config import get_security_headers
+from src.routes.health import track_request_metrics
+
+
+
+
+load_dotenv()
 
 try:
     config = get_config()
@@ -13,14 +30,17 @@ except ConfigError as e:
     import sys
     sys.exit(1)
 
-# Validate API key but don't block startup - will fail at runtime if needed
+
+# Validate API key explicitly
 api_key = os.getenv("OPENROUTER_API_KEY")
 if not api_key:
-    print("WARNING: OPENROUTER_API_KEY not set - chat will fail at runtime")
+    print("ERROR: OPENROUTER_API_KEY is missing. Please copy .env.example to .env and add your OpenRouter API key.")
+    import sys
+    sys.exit(1)
 else:
-    print("✓ OPENROUTER_API_KEY is set")
+    print("OK OPENROUTER_API_KEY is set")
 
-from flask import Flask
+
 
 app = Flask(__name__)
 
@@ -30,19 +50,16 @@ app.config['SESSION_COOKIE_SECURE'] = config.security.session_cookie_secure
 app.config['SESSION_COOKIE_HTTPONLY'] = config.security.session_cookie_httponly
 app.config['SESSION_COOKIE_SAMESITE'] = config.security.session_cookie_samesite
 
+
 # Setup logging
-from src.logging_config import setup_logging
 logger = setup_logging(app_env=config.env, log_dir=config.paths.log_dir)
 logger.info(f"Ramya starting in {config.env} mode")
-
 # Setup logging middleware
-from src.middleware.logging_middleware import setup_logging_middleware
 setup_logging_middleware(app)
 
+
+
 try:
-    from flask_talisman import Talisman
-    from src.security_config import get_security_headers
-    
     security_headers = get_security_headers()
     
     Talisman(
@@ -62,19 +79,14 @@ except ImportError:
     print("WARNING: flask-talisman not installed. Run: pip install flask-talisman")
 
 
+
 @app.context_processor
 def override_url_for():
     from src.j_utils import dated_url_for
     return dict(url_for=dated_url_for)
 
 
-from src.routes.k_auth import auth_bp
-from src.routes.l_home import home_bp
-from src.routes.m_chat import chat_bp
-from src.routes.n_tts import tts_bp
-from src.routes.o_stt import stt_bp
-from src.routes.health import health_bp
-from src.p_error_handlers import errors_bp
+
 
 
 app.register_blueprint(auth_bp, url_prefix='')
@@ -86,7 +98,7 @@ app.register_blueprint(health_bp, url_prefix='')
 app.register_blueprint(errors_bp)
 
 # Register metrics tracking
-from src.routes.health import track_request_metrics
+
 app.after_request(track_request_metrics)
 
 

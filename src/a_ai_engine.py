@@ -78,21 +78,39 @@ class RamyaBot:
     def _load_model_ranking(self):
         """Load model ranking from .env file or return default fallback."""
         fallback_models = {
-            1: "meta-llama/llama-3.3-70b-instruct:free",
-            2: "nousresearch/hermes-3-llama-3.1-405b:free",
-            3: "google/gemma-3-27b-it:free",
-            4: "google/gemini-2.0-flash-exp:free",
-            5: "deepseek/deepseek-r1:free",
-            6: "qwen/qwen-2.5-72b-instruct:free",
-            7: "meta-llama/llama-3.2-3b-instruct:free",
-            8: "meta-llama/llama-3.2-1b-instruct:free",
-            9: "huggingfaceh4/zephyr-7b-beta:free",
-            10: "mistralai/mistral-7b-instruct:free",
-            11: "openchat/openchat-7b:free",
-            12: "undi95/toppy-m-7b:free",
-            13: "gryphe/mythomist-7b:free",
-            14: "nousresearch/nous-capybara-7b:free",
-            15: "pygmalionai/mythalion-13b:free"
+            1: "nousresearch/hermes-3-llama-3.1-405b:free",
+            2: "google/gemini-2.0-flash-exp:free",
+            3: "deepseek/deepseek-r1:free",
+            4: "qwen/qwen-2.5-72b-instruct:free",
+            5: "meta-llama/llama-3.2-1b-instruct:free",
+            6: "huggingfaceh4/zephyr-7b-beta:free",
+            7: "mistralai/mistral-7b-instruct:free",
+            8: "openchat/openchat-7b:free",
+            9: "undi95/toppy-m-7b:free",
+            10: "gryphe/mythomist-7b:free",
+            11: "nousresearch/nous-capybara-7b:free",
+            12: "pygmalionai/mythalion-13b:free",
+            13: "z-ai/glm-4.5-air:free",
+            14: "nvidia/nemotron-3-super:free",
+            15: "nvidia/nemotron-3-nano-30b-a3b:free",
+            16: "arcee-ai/trinity-mini:free",
+            17: "nvidia/nemotron-nano-9b-v2:free",
+            18: "nvidia/nemotron-nano-12b-2-vl:free",
+            19: "openai/gpt-oss-120b:free",
+            20: "qwen/qwen3-coder-480b-a35b-instruct:free",
+            21: "qwen/qwen3-next-80b-a3b-instruct:free",
+            22: "liquidai/lfm-2.5-1.2b-thinking:free",
+            23: "liquidai/lfm-2.5-1.2b-instruct:free",
+            24: "openai/gpt-oss-20b:free",
+            25: "mistralai/mistral-small-3.1-24b-instruct:free",
+            26: "qwen/qwen3-4b-instruct:free",
+            27: "venice/uncensored:free",
+            28: "nousresearch/hermes-3-405b-instruct:free",
+            29: "google/gemma-3-4b-it:free",
+            30: "google/gemma-3n-4b-it:free",
+            31: "google/gemma-3n-2b-it:free",
+            32: "google/gemma-3-12b-it:free",
+            33: "nvidia/llama-nemotron-embed-vl-1b-v2:free"
         }
         
         try:
@@ -327,7 +345,11 @@ class RamyaBot:
         try:
             active_api_stream = self._call_with_fallback(current_messages, max_tokens=1000, stream=True)
             
-            if isinstance(active_api_stream, str): 
+            if active_api_stream is None:
+                error_msg = "Sorry, all AI models failed to respond or are unavailable."
+                yield error_msg
+                full_response_accumulator.append(error_msg)
+            elif isinstance(active_api_stream, str): 
                 yield active_api_stream
                 full_response_accumulator.append(active_api_stream)
             else:
