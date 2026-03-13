@@ -1,6 +1,7 @@
 name: CI/CD Pipeline
 
-on: [push, pull_request]
+# Temporarily disabled for deployment - will re-enable after testing
+# on: [push, pull_request]
 
 jobs:
   build:
