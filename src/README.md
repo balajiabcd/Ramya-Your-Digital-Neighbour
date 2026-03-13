@@ -49,7 +49,7 @@ src/
 **Purpose:** Main chatbot logic using OpenRouter API with model fallback
 
 **Key Features:**
-- Integration with OpenRouter API (36+ free models)
+- Integration with OpenRouter API (15+ free models)
 - Automatic model fallback when primary model fails
 - Daily model reset capability
 - Streaming responses support

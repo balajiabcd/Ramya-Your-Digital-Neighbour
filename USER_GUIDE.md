@@ -26,7 +26,7 @@
 
 ### Starting the App
 
-1. Open your browser and navigate to `http://localhost:5000`
+1. Open your browser and navigate to `http://localhost:8080`
 2. You will be redirected to the login page
 
 ---
