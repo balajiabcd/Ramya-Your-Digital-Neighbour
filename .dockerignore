@@ -1,0 +1,96 @@
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments (don't include, will install fresh in container)
+venv/
+.venv/
+env/
+ENV/
+
+# Version control (not needed in production image)
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing and coverage (don't need tests in production)
+tests/
+test_session.py
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# Documentation (optional - remove if you want to include)
+*.md
+README*
+LICENSE
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Logs and temporary files
+*.log
+logs/
+*.tmp
+*.temp
+
+# Application runtime data (optional - set via volumes in docker-compose)
+# Uncomment if you want these excluded from the image
+# However, if you want to include empty dirs uncomment next line
+# ramya_memory_db/
+
+# Audio uploads (large files - should use volumes instead)
+# static/audio/
+
+# Local development files
+.env.local
+.env.*.local
+config.local.yaml
+
+# Docker/compose files (don't copy into image)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+Procfile
+
+# Development artifacts
+*.pyc
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Generated files
+*.pdf
+*.docx
+reports/
+generate_report.py

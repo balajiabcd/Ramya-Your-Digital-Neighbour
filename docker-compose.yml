@@ -1,0 +1,94 @@
+# =============================================================================
+# Ramya: Your Digital Neighbour - Docker Compose
+# =============================================================================
+# Usage:
+#   docker-compose up -d          # Start in detached mode
+#   docker-compose logs -f ramya  # View logs
+#   docker-compose down           # Stop containers
+#   docker-compose down -v        # Stop and remove volumes
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # -------------------------------------------------------------------------
+  # Main Ramya Application
+  # -------------------------------------------------------------------------
+  ramya:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ramya-app
+    restart: unless-stopped
+    ports:
+      - "${RAMYA_PORT:-8080}:8080"
+    environment:
+      - APP_ENV=Production
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - CHROMADB_PATH=/app/ramya_memory_db
+      - LOG_DIR=/app/logs
+      - PORT=8080
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:8080}
+      - RATE_LIMIT_CHAT=${RATE_LIMIT_CHAT:-5}
+      - RATE_LIMIT_CHAT_WINDOW=${RATE_LIMIT_CHAT_WINDOW:-60}
+      - RATE_LIMIT_TTS=${RATE_LIMIT_TTS:-10}
+      - RATE_LIMIT_TTS_WINDOW=${RATE_LIMIT_TTS_WINDOW:-60}
+      - RATE_LIMIT_STT=${RATE_LIMIT_STT:-10}
+      - RATE_LIMIT_STT_WINDOW=${RATE_LIMIT_STT_WINDOW:-60}
+    volumes:
+      - ramya_data:/app/ramya_memory_db
+      - ramya_audio:/app/static/audio
+      - ramya_logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - ramya-network
+
+  # -------------------------------------------------------------------------
+  # Redis (for Phase 2: Production Security)
+  # -------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: ramya-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ramya-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# -----------------------------------------------------------------------------
+# Networks
+# -----------------------------------------------------------------------------
+networks:
+  ramya-network:
+    driver: bridge
+
+# -----------------------------------------------------------------------------
+# Volumes (Persistent Data)
+# -----------------------------------------------------------------------------
+volumes:
+  ramya_data:
+    driver: local
+  ramya_audio:
+    driver: local
+  ramya_logs:
+    driver: local
+  redis_data:
+    driver: local

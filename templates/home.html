@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramya: Digital Neighbour - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='image.png') }}">
+    <script src="{{ url_for('static', filename='marked.min.js') }}"></script>
+</head>
+
+<body>
+    <div class="home-container">
+        <!-- Header -->
+        <header class="home-header">
+            <div class="home-brand">
+                <img src="{{ url_for('static', filename='image.png') }}" class="home-logo" alt="Ramya Logo">
+                <div class="home-brand-text">
+                    <h1>Ramya</h1>
+                    <p>Your Digital Neighbour</p>
+                </div>
+            </div>
+            <div class="home-user-section">
+                {% if user %}
+                <div class="home-user-info">
+                    <img src="{{ url_for('static', filename='image.png') }}" alt="Profile" class="home-user-avatar">
+                    <div class="home-user-details">
+                        <span class="home-user-name">{{ user.username }}</span>
+                        <div class="home-user-actions">
+                            <a href="#" id="open-security-btn" class="home-security-btn">Security</a>
+                            <span class="home-auth-sep">•</span>
+                            <a href="{{ url_for('auth.logout') }}" class="home-logout-btn">Log out</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Change Password Modal -->
+        <div id="security-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-security-modal">&times;</span>
+                <h2>Change Password</h2>
+                <form id="change-password-form">
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" required placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required placeholder="Min 6 characters">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" required placeholder="Confirm new password">
+                    </div>
+                    <div id="password-message" class="error-text"></div>
+                    <button type="submit" class="modal-btn">Update Password</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="home-main">
+            <h2 class="home-title">Welcome back!</h2>
+            <p class="home-subtitle">Select a chat to continue or start a new conversation</p>
+
+            <!-- Chat Bars Container -->
+            <div class="chat-bars-wrapper">
+                <!-- New Chat Bar -->
+                <div class="chat-bar chat-bar-new" id="new-chat-bar">
+                    <div class="chat-bar-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                        </svg>
+                    </div>
+                    <div class="chat-bar-content">
+                        <span class="chat-bar-title">New Chat</span>
+                        <span class="chat-bar-preview">Start a fresh conversation</span>
+                    </div>
+                </div>
+
+                <!-- Previous Chats -->
+                <div id="previous-chats-container">
+                    <!-- Chat bars will be loaded dynamically -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="no-chats-message" class="no-chats-message" style="display: none;">
+                    <p>No previous chats yet. Start a new conversation!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=5"></script>
+    <script>
+        // Initialize home page
+        console.log('Home page script loaded');
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, calling loadHomePage');
+            loadHomePage();
+        });
+    </script>
+</body>
+
+</html>

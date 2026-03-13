@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramya: Digital Neighbour</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='image.png') }}">
+    <script src="{{ url_for('static', filename='marked.min.js') }}"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Active Chats</h3>
+            </div>
+            <ul class="chat-list" id="chat-history-list">
+            </ul>
+            <div class="user-profile">
+                {% if user %}
+                <div class="user-info">
+                    <img src="{{ url_for('static', filename='image.png') }}" alt="Profile" class="user-avatar">
+                    <div class="user-details">
+                        <span class="user-name">{{ user.username }}</span>
+                        <div class="user-actions">
+                            <a href="#" id="open-security-btn" class="auth-link">Security</a>
+                            <span class="auth-sep">•</span>
+                            <a href="{{ url_for('auth.logout') }}" class="auth-link">Log out</a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('auth.login_page') }}" class="login-btn">
+                    Sign in
+                </a>
+                {% endif %}
+            </div>
+            <a href="{{ url_for('home.home') }}" class="home-link-btn">← Back to Home</a>
+            <button class="new-chat-btn" id="new-chat-btn">+ Start New Chat</button>
+
+        </aside>
+
+        <!-- Change Password Modal -->
+        <div id="security-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-security-modal">&times;</span>
+                <h2>Change Password</h2>
+                <form id="change-password-form">
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" required placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required placeholder="Min 6 characters">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" required placeholder="Confirm new password">
+                    </div>
+                    <div id="password-message" class="error-text"></div>
+                    <button type="submit" class="modal-btn">Update Password</button>
+                </form>
+            </div>
+        </div>
+
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="header-content">
+                    <img src="{{ url_for('static', filename='image.png') }}" class="app-logo" alt="Ramya Logo">
+                    <div class="header-text">
+                        <h1>Ramya</h1>
+                        <p>Your Digital Neighbour</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="status" id="status"><span class="status-dot"></span>Online</div>
+                    <!-- Mute/Unmute Button -->
+                    <button id="mute-btn" class="icon-btn" title="Mute/Unmute voice">🔊</button>
+                    <!-- Voice Settings Toggle -->
+                    <button id="voice-settings-btn" class="icon-btn" title="Voice settings">⚙️</button>
+                </div>
+            </header>
+
+            <!-- Collapsible Voice Settings Panel -->
+            <div id="voice-settings-panel" class="voice-settings-panel" style="display:none;">
+                <div class="voice-settings-inner">
+                    <label for="voice-select">Voice</label>
+                    <select id="voice-select">
+                        <option value="en-US-JennyNeural" selected>🇺🇸 American – Jenny</option>
+                        <option value="en-IN-NeerjaNeural">🇮🇳 Indian – Neerja</option>
+                        <option value="en-GB-SoniaNeural">🇬🇧 British – Sonia</option>
+                        <option value="en-AU-NatashaNeural">🇦🇺 Australian – Natasha</option>
+                    </select>
+
+                    <label for="rate-slider">Speed: <span id="rate-label">1.0x</span></label>
+                    <input type="range" id="rate-slider" min="-50" max="100" step="5" value="0">
+
+                    <label for="pitch-slider">Pitch: <span id="pitch-label">0 Hz</span></label>
+                    <input type="range" id="pitch-slider" min="-20" max="20" step="2" value="0">
+                </div>
+            </div>
+
+            <div class="messages-container" id="chat-window">
+                <div id="messages">
+                </div>
+            </div>
+
+            <footer class="input-area">
+                <form id="chat-form">
+                    <button type="button" id="mic-btn" class="mic-btn" title="Hold to speak">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor"
+                                d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                            <path fill="currentColor"
+                                d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+                        </svg>
+                    </button>
+                    <input type="text" id="user-input" placeholder="Ask Ramya anything..." autocomplete="off" required>
+                    <button type="button" id="stop-btn" class="stop-btn" style="display: none;">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <rect x="6" y="6" width="12" height="12" fill="currentColor"></rect>
+                        </svg>
+                    </button>
+                    <button type="submit" class="send-btn" id="send-btn">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </form>
+            </footer>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
