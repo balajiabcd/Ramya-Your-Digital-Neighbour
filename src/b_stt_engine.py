@@ -23,8 +23,8 @@ class STTEngine:
     def _load_model(self) -> None:
         try:
             from faster_whisper import WhisperModel
-            logger.info("Loading Whisper model (base, English only)...")
-            self.model = WhisperModel("base", device="cpu", compute_type="int8")
+            logger.info("Loading Whisper model (tiny, English only)...")
+            self.model = WhisperModel("tiny", device="cpu", compute_type="int8")
             logger.info("Whisper model loaded successfully")
         except Exception as e:
             logger.error(f"Failed to load Whisper model: {e}")

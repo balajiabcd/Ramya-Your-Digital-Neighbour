@@ -66,7 +66,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/')" || exit 1
 
 # Start application with gunicorn
-# - 4 workers for concurrent request handling
+# - 1 worker to stay within 512MB RAM limit
+# - 2 threads for concurrent requests
 # - 120s timeout for long-running AI responses
-# - Access/error logs to stdout for docker logging
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "2", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
