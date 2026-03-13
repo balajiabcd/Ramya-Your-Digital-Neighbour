@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from src.d_security_utils import validate_api_key
 from src.config import get_config, validate_config, ConfigError
 
 try:
@@ -14,13 +13,12 @@ except ConfigError as e:
     import sys
     sys.exit(1)
 
-try:
-    api_key = os.getenv("OPENROUTER_API_KEY")
-    validate_api_key(api_key)
-except ValueError as e:
-    print(f"CRITICAL ERROR: {e}")
-    import sys
-    sys.exit(1)
+# Validate API key but don't block startup - will fail at runtime if needed
+api_key = os.getenv("OPENROUTER_API_KEY")
+if not api_key:
+    print("WARNING: OPENROUTER_API_KEY not set - chat will fail at runtime")
+else:
+    print("✓ OPENROUTER_API_KEY is set")
 
 from flask import Flask
 
