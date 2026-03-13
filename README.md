@@ -338,9 +338,21 @@ volumes:
 
 | Platform | Method |
 |----------|--------|
-| Heroku / Render | `git push` (uses `Procfile`) |
+| Render | **Docker (Recommended)** - Use `render.yaml` |
+| Heroku | `git push` (uses `Procfile`) |
 | AWS / GCP / Azure | `docker-compose up -d` |
 | Any VPS | `docker-compose up -d` |
+
+### Setting up on Render
+
+1. **Connect GitHub:** Link your repository to Render.
+2. **Use Blueprints:** Render will detect the `render.yaml` file automatically.
+3. **Environment Variables:**
+   - `OPENROUTER_API_KEY`: Your OpenRouter key (Found in OpenRouter settings).
+   - `SECRET_KEY`: Automatically generated (or set manually).
+4. **Persistence:**
+   - On the **Free Tier**, the `ramya_memory_db` is ephemeral and will reset on every redeploy.
+   - For long-term memory, upgrade to a **Starter** plan and enable the **Persistent Disk** (see `render.yaml`).
 
 > **Remember:** Set your `OPENROUTER_API_KEY`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` as environment variables on the platform.
 
