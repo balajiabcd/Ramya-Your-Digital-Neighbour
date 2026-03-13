@@ -1,7 +1,6 @@
 name: CI/CD Pipeline
 
-# Temporarily disabled for deployment - will re-enable after testing
-# on: [push, pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -27,6 +26,7 @@ jobs:
 
       - name: Test with pytest
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || 'test-key-for-ci' }}
+          APP_ENV: Testing
         run: |
-          pytest --cov=src --cov-report=xml
+          pytest tests/ -v --tb=short
