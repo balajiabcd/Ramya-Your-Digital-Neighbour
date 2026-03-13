@@ -50,6 +50,24 @@ python -c "import secrets; print(secrets.token_hex(32))"
 docker-compose up -d --build
 ```
 
+### What This Command Does
+
+| Step | What Happens |
+|------|--------------|
+| **Build** | Builds Docker image from `Dockerfile` (installs Python, dependencies) |
+| **Create** | Creates containers for `ramya-app` and `redis` |
+| **Start** | Runs both containers in background (`-d` = detached) |
+| **Mounts** | Maps local folders as Docker volumes for data persistence |
+
+**After running, you'll have:**
+
+```
+ramya-app   → http://localhost:8080
+ramya-redis → localhost:6379 (for rate limiting)
+```
+
+> **Note:** First build takes 3-5 minutes. Later runs are fast.
+
 ### Step 5: Open in Browser
 
 Visit: **http://localhost:8080**
@@ -102,6 +120,18 @@ docker-compose down
 ```
 
 Your data (chats, memories) is saved in Docker volumes and will persist when you restart.
+
+---
+
+## Useful Commands
+
+| Command | What it does |
+|---------|--------------|
+| `docker-compose logs -f` | View live logs |
+| `docker-compose logs -f ramya` | View app logs only |
+| `docker-compose restart ramya` | Restart the app |
+| `docker-compose down` | Stop all containers |
+| `docker-compose down -v` | Stop and delete all data |
 
 ---
 
