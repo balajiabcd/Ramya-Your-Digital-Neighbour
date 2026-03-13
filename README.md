@@ -10,6 +10,15 @@
 
 ---
 
+## Quick Links
+
+| Guide | Description |
+|-------|-------------|
+| **[INSTALL.md](./INSTALL.md)** | How to install and run the app |
+| **[USER_GUIDE.md](./USER_GUIDE.md)** | How to use the app |
+
+---
+
 ## Table of Contents
 
 - [Overview](#overview)
