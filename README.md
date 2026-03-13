@@ -1,6 +1,6 @@
 # Ramya Your Neighbour Online
 
-> **Your Digital Neighbour** -- A production-grade AI chatbot with long-term memory, multi-model fallback, and enterprise security.
+> **Your Digital Neighbour** -- A production-grade AI digital neighbour with memory, multi-model fallback, and enterprise security.
 
 [![Build Status](https://github.com/balajiabcd/Ramya-Your-Digital-Neighbour/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/balajiabcd/Ramya-Your-Digital-Neighbour/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
