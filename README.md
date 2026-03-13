@@ -306,6 +306,35 @@ PATTERNS = [
 
 ## Deployment
 
+### Local Self-Hosted Setup (Docker)
+
+Run Ramya on your own machine with your own API key:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/balajiabcd/Ramya-Your-Digital-Neighbour.git
+cd Ramya-Your-Digital-Neighbour
+
+# 2. Copy environment template
+cp .env.example .env
+
+# 3. Edit .env and add your OpenRouter API key
+# Get a free key from https://openrouter.ai/
+# Generate a secret key: python -c "import secrets; print(secrets.token_hex(32))"
+
+# 4. Start the application
+docker-compose up -d --build
+
+# 5. Open in browser
+# Visit http://localhost:8080
+```
+
+**First-time setup:**
+- Edit `.env` and set `OPENROUTER_API_KEY` (get from https://openrouter.ai/)
+- Set `SECRET_KEY` to a secure random string
+
+**Data persistence:** Your chats and memory are stored in Docker volumes and persist across restarts.
+
 ### Docker (Recommended)
 
 ```bash

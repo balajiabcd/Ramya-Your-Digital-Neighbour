@@ -72,6 +72,7 @@ logs/
 # static/audio/
 
 # Local development files
+.env
 .env.local
 .env.*.local
 config.local.yaml
