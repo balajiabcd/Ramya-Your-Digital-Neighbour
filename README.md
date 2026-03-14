@@ -14,8 +14,8 @@
 
 | Guide                                   | Description                    |
 | --------------------------------------- | ------------------------------ |
-| **[INSTALL.md](./INSTALL.md)**       | How to install and run the app |
-| **[USER_GUIDE.md](./USER_GUIDE.md)** | How to use the app             |
+| **[docs/INSTALL.md](./docs/INSTALL.md)**       | How to install and run the app |
+| **[docs/USER_GUIDE.md](./docs/USER_GUIDE.md)** | How to use the app             |
 
 ---
 
@@ -39,7 +39,7 @@
 
 ---
 
-Ramya Bot is an AI-powered conversational assistant that combines the power of **15 large language models** with **Retrieval-Augmented Generation (RAG)** to deliver intelligent, context-aware responses. It remembers past conversations using a local **ChromaDB** vector database, streams responses to audio, and is secured with local **Username/Password authentication** and per-user data isolation.
+Ramya Bot is an AI-powered conversational assistant that combines the power of **32 large language models** with **Retrieval-Augmented Generation (RAG)** to deliver intelligent, context-aware responses. It remembers past conversations using a local **ChromaDB** vector database, streams responses to audio, and is secured with **Google OAuth 2.0** or local **Username/Password authentication** with per-user data isolation.
 
 The entire stack is containerized with Docker, tested with pytest, and automated via GitHub Actions.
 
@@ -52,7 +52,7 @@ The entire stack is containerized with Docker, tested with pytest, and automated
 | **Multi-Model Fallback**  | 32 AI models ranked by priority; automatic failover guarantees near-100% uptime |
 | **RAG Long-Term Memory**  | ChromaDB stores and retrieves semantically relevant past conversations          |
 | **Real-Time Streaming**   | Token-by-token SSE streaming with a stop-generation button                      |
-| **Local Auth System**     | Secure username and password based registration and login                       |
+| **Authentication**        | Google OAuth 2.0 + Local username/password registration and login              |
 | **Rate Limiting**         | Sliding-window limiter (5 req/60s) with Redis support                           |
 | **Security Headers**      | Robust CSP and security headers via Flask-Talisman                              |
 | **Cloud Voice (TTS)**     | High-quality streaming voice using Microsoft Edge TTS                           |
@@ -89,34 +89,68 @@ ramya-bot/
 |-- requirements.txt                # Python dependencies
 |-- Dockerfile                      # Multi-stage container build
 |-- docker-compose.yml              # Orchestration with persistent volumes
+|-- render.yaml                     # Render deployment config
 |-- .env                            # API keys & secrets (gitignored)
+|-- .env.example                    # Environment template
 |-- .gitignore                      # Git exclusion rules
+|-- LICENSE                         # MIT License
 |
 |-- src/                            # Modularized core logic
 |   |-- routes/                     # Blueprint-based API endpoints
-|   |   |-- k_auth.py               # Authentication (Register/Login)
+|   |   |-- k_auth.py               # Authentication (Register/Login/OAuth)
+|   |   |-- l_home.py               # Home page routes
 |   |   |-- m_chat.py               # Chat session management
-|   |   |-- health.py               # Monitoring & Prometheus metrics
+|   |   |-- n_tts.py                # Text-to-Speech (Edge TTS)
+|   |   |-- o_stt.py                # Speech-to-Text (Whisper)
+|   |   |-- health.py                # Monitoring & Prometheus metrics
 |   |-- models/                     # Data models
 |   |   |-- user_model.py           # User management with bcrypt
+|   |-- middleware/                 # Flask middleware
+|   |   |-- logging_middleware.py   # Request/response logging
 |   |-- a_ai_engine.py              # LLM orchestration & fallback
+|   |-- b_stt_engine.py             # Speech-to-text engine
 |   |-- c_rag_engine.py             # Memory retrieval logic
 |   |-- d_security_utils.py         # Validation & injection detection
-|   |-- config.py                   # Centralized configuration management
+|   |-- e_cache.py                  # Redis cache management
+|   |-- f_auth.py                   # Authentication decorators
+|   |-- h_config.py                 # Configuration loading
+|   |-- j_utils.py                  # Utility functions
+|   |-- config.py                   # Centralized configuration
+|   |-- rate_limiter.py              # Rate limiting logic
+|   |-- security_config.py           # Security headers configuration
+|   |-- logging_config.py            # Logging setup
+|   |-- p_error_handlers.py          # Error handlers
 |
 |-- templates/
 |   |-- index.html                  # Main chat interface
-|   |-- login.html                  # Local login & registration
-|   |-- home.html                   # User dashboard / chat selection
+|   |-- login.html                  # Login & registration
+|   |-- home.html                   # User dashboard
 |
 |-- static/
 |   |-- global.css                  # Shared CSS tokens
 |   |-- chat.css                    # Chat-specific styles
+|   |-- home.css                    # Home page styles
+|   |-- style.css                   # General styles
 |   |-- script.js                   # Frontend JS (streaming, TTS/STT)
+|   |-- marked.min.js               # Markdown parser
+|   |-- audio/                      # Audio files
+|   |-- *.png, *.ico                # Icons and diagrams
 |
 |-- tests/
-|   |-- test_security_utils.py       # Security validation tests
-|   |-- test_app_logic.py           # Core application tests
+|   |-- test_auth_routes.py         # Authentication tests
+|   |-- test_security_utils.py      # Security validation tests
+|   |-- test_health_routes.py       # Health endpoint tests
+|   |-- test_rate_limiter.py        # Rate limiting tests
+|   |-- test_config.py              # Configuration tests
+|   |-- test_logging_config.py     # Logging tests
+|   |-- test_security_config.py     # Security config tests
+|   |-- conftest.py                 # Pytest fixtures
+|
+|-- docs/
+|   |-- INSTALL.md                  # Installation guide
+|   |-- USER_GUIDE.md               # User documentation
+|   |-- PRODUCTION_DEPLOYMENT.md   # Deployment guide
+|   |-- Ramya_Project_Report.docx   # Presentation report
 ```
 
 ---
@@ -198,7 +232,7 @@ models:
     1: "meta-llama/llama-3.3-70b-instruct:free"
     2: "nousresearch/hermes-3-llama-3.1-405b:free"
     3: "google/gemma-3-27b-it:free"
-    # ... up to 15 models
+    # ... up to 32 models
 
 settings:
   app_name: "Ramya Bot"
@@ -224,7 +258,7 @@ If this file is missing, the engine falls back to a hardcoded default ranking.
 
 ### Model Fallback System
 
-The `RamyaBot._call_with_fallback()` method iterates through 15 ranked models. If a model returns an error (rate limit, timeout, or API failure), it automatically retries with the next model:
+The `RamyaBot._call_with_fallback()` method iterates through 32 ranked models. If a model returns an error (rate limit, timeout, or API failure), it automatically retries with the next model:
 
 ```
 Request --> Model #1 (llama-3.3-70b) --> FAIL
@@ -237,7 +271,7 @@ Request --> Model #1 (llama-3.3-70b) --> FAIL
 ```
 1. User sends message
 2. rag_engine.py queries ChromaDB for semantically similar past interactions
-3. Top 2 most recent memories are injected into the AI prompt
+3. Dual retrieval: Top 2 recent memories + Top 2 related memories
 4. AI generates a response with full conversation context
 5. Response + conversation summary are saved back to ChromaDB
 ```
@@ -404,6 +438,8 @@ volumes:
 | `GET`  | `/login`               | No   | Login page                               |
 | `POST` | `/login`               | No   | Authenticate user                        |
 | `POST` | `/register`            | No   | Register new account                     |
+| `GET`  | `/auth/google`         | No   | Initiate Google OAuth login              |
+| `GET`  | `/auth/google/callback`| No   | Google OAuth callback                    |
 | `GET`  | `/logout`              | No   | Clears session and redirects             |
 | `POST` | `/start_chat`          | Yes  | Creates a new chat session               |
 | `GET`  | `/chats`               | Yes  | Lists all user's chat sessions           |
