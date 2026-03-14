@@ -12,10 +12,10 @@
 
 ## Quick Links
 
-| Guide | Description |
-|-------|-------------|
-| **[INSTALL.md](./INSTALL.md)** | How to install and run the app |
-| **[USER_GUIDE.md](./USER_GUIDE.md)** | How to use the app |
+| Guide                                   | Description                    |
+| --------------------------------------- | ------------------------------ |
+| **[INSTALL.md](./INSTALL.md)**       | How to install and run the app |
+| **[USER_GUIDE.md](./USER_GUIDE.md)** | How to use the app             |
 
 ---
 
@@ -28,13 +28,13 @@
 - [Technology Stack](#technology-stack)
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
-- [AI Engine & RAG Pipeline](#ai-engine--rag-pipeline)
+- [AI Engine &amp; RAG Pipeline](#ai-engine--rag-pipeline)
 - [Security](#security)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Deployment](#deployment)
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
-- [Logging & Monitoring](#logging--monitoring)
+- [Logging &amp; Monitoring](#logging--monitoring)
 - [Future Roadmap](#future-roadmap)
 
 ---
@@ -47,42 +47,39 @@ The entire stack is containerized with Docker, tested with pytest, and automated
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **Multi-Model Fallback** | 15 AI models ranked by priority; automatic failover guarantees near-100% uptime |
-| **RAG Long-Term Memory** | ChromaDB stores and retrieves semantically relevant past conversations |
-| **Real-Time Streaming** | Token-by-token SSE streaming with a stop-generation button |
-| **Local Auth System** | Secure username and password based registration and login |
-| **Rate Limiting** | Sliding-window limiter (5 req/60s) with Redis support |
-| **Security Headers** | Robust CSP and security headers via Flask-Talisman |
-| **Cloud Voice (TTS)** | High-quality streaming voice using Microsoft Edge TTS |
-| **Voice Input (STT)** | Fast transcription using Faster-Whisper |
-| **Dockerized Deployment** | Multi-stage Dockerfile with non-root user and persistent volumes |
-| **CI/CD Pipeline** | GitHub Actions runs automated tests on every push |
+| Feature                         | Description                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------- |
+| **Multi-Model Fallback**  | 32 AI models ranked by priority; automatic failover guarantees near-100% uptime |
+| **RAG Long-Term Memory**  | ChromaDB stores and retrieves semantically relevant past conversations          |
+| **Real-Time Streaming**   | Token-by-token SSE streaming with a stop-generation button                      |
+| **Local Auth System**     | Secure username and password based registration and login                       |
+| **Rate Limiting**         | Sliding-window limiter (5 req/60s) with Redis support                           |
+| **Security Headers**      | Robust CSP and security headers via Flask-Talisman                              |
+| **Cloud Voice (TTS)**     | High-quality streaming voice using Microsoft Edge TTS                           |
+| **Voice Input (STT)**     | Fast transcription using Faster-Whisper                                         |
+| **Dockerized Deployment** | Multi-stage Dockerfile with non-root user and persistent volumes                |
+| **CI/CD Pipeline**        | GitHub Actions runs automated tests on every push                               |
 
 ---
 
 ## System Architecture
 
-
 ![System Architecture](static\app_architeture.png)
-
 
 ### Layer Breakdown
 
-| Layer | Component | Responsibility |
-|-------|-----------|----------------|
-| **Presentation** | `templates/`, `static/` | Glassmorphic UI, streaming audio, real-time chat display |
-| **Application** | `src/routes/`, `app.py` | Modular routing, authentication controllers, middleware |
-| **Intelligence** | `src/a_ai_engine.py` | AI orchestration, model fallback, RAG pipeline |
-| **Audio** | `src/routes/n_tts.py`, `src/routes/o_stt` | Edge TTS streaming and Whisper STT processing |
-| **Data** | `src/c_rag_engine.py` | ChromaDB vector storage and semantic search |
-| **Security** | `src/d_security_utils.py` | Input sanitization, injection detection, rate limiting |
+| Layer                  | Component                                     | Responsibility                                           |
+| ---------------------- | --------------------------------------------- | -------------------------------------------------------- |
+| **Presentation** | `templates/`, `static/`                   | Glassmorphic UI, streaming audio, real-time chat display |
+| **Application**  | `src/routes/`, `app.py`                   | Modular routing, authentication controllers, middleware  |
+| **Intelligence** | `src/a_ai_engine.py`                        | AI orchestration, model fallback, RAG pipeline           |
+| **Audio**        | `src/routes/n_tts.py`, `src/routes/o_stt` | Edge TTS streaming and Whisper STT processing            |
+| **Data**         | `src/c_rag_engine.py`                       | ChromaDB vector storage and semantic search              |
+| **Security**     | `src/d_security_utils.py`                   | Input sanitization, injection detection, rate limiting   |
 
 ---
 
 ## Project Structure
-
 
 ```
 ramya-bot/
@@ -126,20 +123,20 @@ ramya-bot/
 
 ## Technology Stack
 
-| Technology | Version | Role |
-|------------|---------|------|
-| Python | 3.11 | Core runtime |
-| Flask | 3.1.3 | Web framework |
-| ChromaDB | 1.5.2 | Vector database for RAG |
-| Edge TTS | 7.2.7 | Cloud-grade voice streaming |
-| Faster-Whisper | 1.2.1 | Fast local speech-to-text |
-| Flask-Talisman | 1.0.0 | Security headers management |
-| Bcrypt | 4.1.2 | Password hashing |
-| Redis | 7.3.0 | Production rate limiting |
-| Waitress | 3.0.0 | Production WSGI server |
-| Prometheus | 0.24.1 | Metrics & monitoring |
-| Docker | latest | Containerization |
-| GitHub Actions | v5 | CI/CD automation |
+| Technology     | Version | Role                        |
+| -------------- | ------- | --------------------------- |
+| Python         | 3.11    | Core runtime                |
+| Flask          | 3.1.3   | Web framework               |
+| ChromaDB       | 1.5.2   | Vector database for RAG     |
+| Edge TTS       | 7.2.7   | Cloud-grade voice streaming |
+| Faster-Whisper | 1.2.1   | Fast local speech-to-text   |
+| Flask-Talisman | 1.0.0   | Security headers management |
+| Bcrypt         | 4.1.2   | Password hashing            |
+| Redis          | 7.3.0   | Production rate limiting    |
+| Waitress       | 3.0.0   | Production WSGI server      |
+| Prometheus     | 0.24.1  | Metrics & monitoring        |
+| Docker         | latest  | Containerization            |
+| GitHub Actions | v5      | CI/CD automation            |
 
 ---
 
@@ -212,14 +209,14 @@ If this file is missing, the engine falls back to a hardcoded default ranking.
 
 ### Environment-Driven Configuration
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `5000` (dev) / `8080` (prod) | Server port |
-| `APP_ENV` | `Development` | `Development` or `Production` |
-| `CHROMADB_PATH` | `ramya_memory_db` | ChromaDB storage path |
-| `LOG_DIR` | `logs` | Log file directory |
-| `LOG_FILE_NAME` | `ramya_prod.log` | Log file name |
-| `CONFIG_PATH` | Auto-detected | Path to config.yaml |
+| Variable          | Default                          | Description                       |
+| ----------------- | -------------------------------- | --------------------------------- |
+| `PORT`          | `5000` (dev) / `8080` (prod) | Server port                       |
+| `APP_ENV`       | `Development`                  | `Development` or `Production` |
+| `CHROMADB_PATH` | `ramya_memory_db`              | ChromaDB storage path             |
+| `LOG_DIR`       | `logs`                         | Log file directory                |
+| `LOG_FILE_NAME` | `ramya_prod.log`               | Log file name                     |
+| `CONFIG_PATH`   | Auto-detected                    | Path to config.yaml               |
 
 ---
 
@@ -305,6 +302,7 @@ PATTERNS = [
 ```
 
 **Stages:**
+
 1. **Checkout** -- `actions/checkout@v4`
 2. **Python Setup** -- `actions/setup-python@v5` (Python 3.10)
 3. **Dependencies** -- `pip install -r requirements.txt`
@@ -339,6 +337,7 @@ docker-compose up -d --build
 ```
 
 **First-time setup:**
+
 - Edit `.env` and set `OPENROUTER_API_KEY` (get from https://openrouter.ai/)
 - Set `SECRET_KEY` to a secure random string
 
@@ -374,12 +373,12 @@ volumes:
 
 ### Cloud Platforms
 
-| Platform | Method |
-|----------|--------|
-| Render | **Docker (Recommended)** - Use `render.yaml` |
-| Heroku | `git push` (uses `Procfile`) |
-| AWS / GCP / Azure | `docker-compose up -d` |
-| Any VPS | `docker-compose up -d` |
+| Platform          | Method                                               |
+| ----------------- | ---------------------------------------------------- |
+| Render            | **Docker (Recommended)** - Use `render.yaml` |
+| Heroku            | `git push` (uses `Procfile`)                     |
+| AWS / GCP / Azure | `docker-compose up -d`                             |
+| Any VPS           | `docker-compose up -d`                             |
 
 ### Setting up on Render
 
@@ -398,22 +397,22 @@ volumes:
 
 ## API Endpoints
 
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| `GET` | `/` | Yes | Home page (redirected from login) |
-| `GET` | `/login` | No | Login page |
-| `POST` | `/login` | No | Authenticate user |
-| `POST` | `/register` | No | Register new account |
-| `GET` | `/logout` | No | Clears session and redirects |
-| `POST` | `/start_chat` | Yes | Creates a new chat session |
-| `GET` | `/chats` | Yes | Lists all user's chat sessions |
-| `POST` | `/delete_chat` | Yes | Deletes a chat session |
-| `GET` | `/chat_history/<name>` | Yes | Retrieves chat history |
-| `POST` | `/chat` | Yes | Sends message, returns streamed response |
-| `POST` | `/change_password` | Yes | Update user password |
-| `GET` | `/tts` | Yes | Generate streaming voice for text |
-| `POST` | `/stt` | Yes | Transcribe audio to text |
-| `GET` | `/health/status` | No | Detailed health and system status |
+| Method   | Route                    | Auth | Description                              |
+| -------- | ------------------------ | ---- | ---------------------------------------- |
+| `GET`  | `/`                    | Yes  | Home page (redirected from login)        |
+| `GET`  | `/login`               | No   | Login page                               |
+| `POST` | `/login`               | No   | Authenticate user                        |
+| `POST` | `/register`            | No   | Register new account                     |
+| `GET`  | `/logout`              | No   | Clears session and redirects             |
+| `POST` | `/start_chat`          | Yes  | Creates a new chat session               |
+| `GET`  | `/chats`               | Yes  | Lists all user's chat sessions           |
+| `POST` | `/delete_chat`         | Yes  | Deletes a chat session                   |
+| `GET`  | `/chat_history/<name>` | Yes  | Retrieves chat history                   |
+| `POST` | `/chat`                | Yes  | Sends message, returns streamed response |
+| `POST` | `/change_password`     | Yes  | Update user password                     |
+| `GET`  | `/tts`                 | Yes  | Generate streaming voice for text        |
+| `POST` | `/stt`                 | Yes  | Transcribe audio to text                 |
+| `GET`  | `/health/status`       | No   | Detailed health and system status        |
 
 ---
 
@@ -431,13 +430,13 @@ pytest tests/test_app_logic.py::test_status_endpoint -v
 
 ### Test Suite
 
-| Test | What It Verifies |
-|------|------------------|
-| `test_index_page` | Home page returns 200 with "Ramya" in response |
-| `test_status_endpoint` | `/status` returns valid JSON with dependency health |
-| `test_security_injection_protection` | Injection attacks are blocked with 400 |
-| `test_invalid_chat_request` | Empty/malformed requests return 400 |
-| `test_chat_rate_limiting` | 6th rapid request is throttled with 429 |
+| Test                                   | What It Verifies                                      |
+| -------------------------------------- | ----------------------------------------------------- |
+| `test_index_page`                    | Home page returns 200 with "Ramya" in response        |
+| `test_status_endpoint`               | `/status` returns valid JSON with dependency health |
+| `test_security_injection_protection` | Injection attacks are blocked with 400                |
+| `test_invalid_chat_request`          | Empty/malformed requests return 400                   |
+| `test_chat_rate_limiting`            | 6th rapid request is throttled with 429               |
 
 ---
 
