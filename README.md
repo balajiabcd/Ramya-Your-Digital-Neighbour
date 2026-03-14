@@ -1,4 +1,4 @@
-# Ramya Your Neighbour Online
+# Ramya: Your Digital Neighbour
 
 > **Your Digital Neighbour** -- A production-grade AI digital neighbour with memory, multi-model fallback, and enterprise security.
 
