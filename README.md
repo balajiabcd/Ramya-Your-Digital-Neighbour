@@ -264,14 +264,15 @@ This ensures complete data privacy between authenticated users.
 ### Defense Layers
 
 ```
-Layer 1: Local Credential Auth     --> Username/Password login required
-Layer 2: Input Sanitization        --> HTML tags stripped, whitespace trimmed
-Layer 3: Prompt Injection Detection --> Adversarial patterns blocked (400)
-Layer 4: Rate Limiting             --> 5 requests / 60 seconds (Redis-backed)
-Layer 5: Password Security         --> Bcrypt hashing with random salt
-Layer 6: Security Headers          --> XSS, Clickjacking, MIME-sniffing protection
-Layer 7: CSRF & Session Protection --> Secure cookie management
-Layer 8: Per-User Data Isolation   --> Namespaced ChromaDB collections
+Layer 1: Local Credential Auth       --> Username/Password login required
+Layer 1.5: Google OAuth 2.0          --> Secure social login option
+Layer 2: Input Sanitization         --> HTML tags stripped, whitespace trimmed
+Layer 3: Prompt Injection Detection  --> Adversarial patterns blocked (400)
+Layer 4: Rate Limiting              --> 5 requests / 60 seconds (Redis-backed)
+Layer 5: Password Security          --> Bcrypt hashing with random salt
+Layer 6: Security Headers           --> XSS, Clickjacking, MIME-sniffing protection
+Layer 7: CSRF & Session Protection  --> Secure cookie management
+Layer 8: Per-User Data Isolation    --> Namespaced ChromaDB collections
 ```
 
 ### Prompt Injection Patterns Blocked
