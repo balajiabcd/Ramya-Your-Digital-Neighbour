@@ -64,7 +64,7 @@ The entire stack is containerized with Docker, tested with pytest, and automated
 
 ## System Architecture
 
-![System Architecture](static\app_architeture.png)
+![System Architecture](static/app_architeture.png)
 
 ### Layer Breakdown
 
