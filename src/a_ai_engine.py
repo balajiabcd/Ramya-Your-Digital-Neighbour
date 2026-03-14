@@ -21,6 +21,7 @@ class RamyaBot:
     def __init__(self, api_key, user_email=None):
         self.user_email = user_email
         self.user_prefix = self._get_user_prefix(user_email)
+        self.chat_name = None
         
         # Load Model Rankings from .env or fallback to defaults
         self.MODEL_RANKING = self._load_model_ranking()
@@ -202,7 +203,10 @@ class RamyaBot:
         
         # Load the specific memory from ChromaDB
         self.current_collection = self.chroma_client.get_or_create_collection(name=full_name)
-        self.history = [{"role": "system", "content": self.Ramya_role}]
+        self.chat_name = chat_name
+        
+        topic_instruction = f"The current topic is '{self.chat_name}'. If the user's question is not related to this topic, respond with 'This question is not related to our current topic: {self.chat_name}.'"
+        self.history = [{"role": "system", "content": self.Ramya_role + "\n\n" + topic_instruction}]
         
         # Load recent history into context
         try:
@@ -425,8 +429,8 @@ class RamyaBot:
             self.current_collection.add(
                 documents=[f"User said: {user_input}", f"Ramya replied: {message_text}"],
                 ids=[user_id, bot_id],
-                metadatas=[ {"type":"user","summary": "", "timestamp": ts},
-                            {"type":"ramya","summary": combined_summary, "timestamp": ts}]   )
+                metadatas=[ {"type":"user","summary": "", "timestamp": ts, "topic_name": self.chat_name},
+                            {"type":"ramya","summary": combined_summary, "timestamp": ts, "topic_name": self.chat_name}]   )
         except Exception as e:
             print(f"ChromaDB Add Error: {e}")
 

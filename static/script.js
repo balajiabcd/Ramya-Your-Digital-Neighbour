@@ -937,7 +937,7 @@ window.onload = async () => {
 };
 
 document.getElementById('new-chat-btn')?.addEventListener('click', () => {
-    const chatName = prompt("What shall we name this new conversation?");
+    const chatName = prompt("what is the topic that we are going to discuss: enter the topic");
     if (chatName) {
         startChatSession(chatName.replace(/\s+/g, '_'));
     }
@@ -1137,7 +1137,7 @@ async function getLastMessagePreview(chatName) {
 
 // New Chat button - create chat and redirect to chat page
 document.getElementById('new-chat-bar')?.addEventListener('click', async () => {
-    const chatName = prompt("What shall we name this new conversation?");
+    const chatName = prompt("what is the topic that we are going to discuss: enter the topic");
     if (chatName) {
         const safeName = chatName.replace(/\s+/g, '_');
         await fetch('/start_chat', {
